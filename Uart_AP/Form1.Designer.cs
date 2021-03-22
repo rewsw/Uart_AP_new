@@ -32,6 +32,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.comportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.savecsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.reg_datagrid = new System.Windows.Forms.DataGridView();
@@ -78,7 +79,10 @@
             this.Set_EN_btn = new System.Windows.Forms.Button();
             this.FIFO_Read_btn = new System.Windows.Forms.Button();
             this.Rst_FIFO_btn = new System.Windows.Forms.Button();
-            this.savecsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.New_FIFO_db = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -89,6 +93,10 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FIFO_reg_db)).BeginInit();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.New_FIFO_db)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -97,7 +105,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(509, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1270, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -116,16 +124,23 @@
             // 
             this.comportToolStripMenuItem.Name = "comportToolStripMenuItem";
             this.comportToolStripMenuItem.RightToLeftAutoMirrorImage = true;
-            this.comportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.comportToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.comportToolStripMenuItem.Text = "Comport";
             this.comportToolStripMenuItem.Click += new System.EventHandler(this.comportToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.testToolStripMenuItem.Text = "Test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
+            // 
+            // savecsvToolStripMenuItem
+            // 
+            this.savecsvToolStripMenuItem.Name = "savecsvToolStripMenuItem";
+            this.savecsvToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.savecsvToolStripMenuItem.Text = "Save .csv";
+            this.savecsvToolStripMenuItem.Click += new System.EventHandler(this.savecsvToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
@@ -573,10 +588,10 @@
             // FIFO_reg_db
             // 
             this.FIFO_reg_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.FIFO_reg_db.Location = new System.Drawing.Point(38, 453);
+            this.FIFO_reg_db.Location = new System.Drawing.Point(12, 6);
             this.FIFO_reg_db.Name = "FIFO_reg_db";
             this.FIFO_reg_db.RowTemplate.Height = 24;
-            this.FIFO_reg_db.Size = new System.Drawing.Size(434, 323);
+            this.FIFO_reg_db.Size = new System.Drawing.Size(735, 509);
             this.FIFO_reg_db.TabIndex = 3;
             // 
             // Set_EN_btn
@@ -609,23 +624,57 @@
             this.Rst_FIFO_btn.UseVisualStyleBackColor = true;
             this.Rst_FIFO_btn.Click += new System.EventHandler(this.Rst_FIFO_btn_Click);
             // 
-            // savecsvToolStripMenuItem
+            // tabControl2
             // 
-            this.savecsvToolStripMenuItem.Name = "savecsvToolStripMenuItem";
-            this.savecsvToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.savecsvToolStripMenuItem.Text = "Save .csv";
-            this.savecsvToolStripMenuItem.Click += new System.EventHandler(this.savecsvToolStripMenuItem_Click);
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Location = new System.Drawing.Point(489, 27);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(769, 559);
+            this.tabControl2.TabIndex = 7;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.FIFO_reg_db);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(761, 533);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "Old";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.New_FIFO_db);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(761, 533);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "New";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // New_FIFO_db
+            // 
+            this.New_FIFO_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.New_FIFO_db.Location = new System.Drawing.Point(7, 9);
+            this.New_FIFO_db.Name = "New_FIFO_db";
+            this.New_FIFO_db.RowTemplate.Height = 24;
+            this.New_FIFO_db.Size = new System.Drawing.Size(748, 518);
+            this.New_FIFO_db.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(509, 788);
+            this.ClientSize = new System.Drawing.Size(1270, 598);
+            this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.Rst_FIFO_btn);
             this.Controls.Add(this.FIFO_Read_btn);
             this.Controls.Add(this.Set_EN_btn);
             this.Controls.Add(this.Write_all_btn);
-            this.Controls.Add(this.FIFO_reg_db);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.Get_value_btn);
@@ -653,6 +702,10 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FIFO_reg_db)).EndInit();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.New_FIFO_db)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -711,6 +764,10 @@
         private System.Windows.Forms.RadioButton ADC_DATo_MUX_1_rbn;
         private System.Windows.Forms.RadioButton ADC_DATo_MUX_0_rbn;
         private System.Windows.Forms.ToolStripMenuItem savecsvToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.DataGridView New_FIFO_db;
     }
 }
 

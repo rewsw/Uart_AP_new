@@ -35,7 +35,7 @@ namespace Uart_AP
             reg_datagrid.ColumnHeadersVisible = false;
             for (int i = 0; i < 4; i++)
             {
-                reg_datagrid.Columns[i].Width = reg_datagrid.Width / 4;
+                reg_datagrid.Columns[i].Width = reg_datagrid.Width / 4-1;
             }
             for (int i = 0; i < 7; i++)
             {
@@ -55,6 +55,17 @@ namespace Uart_AP
             {
                 FIFO_reg_db.Columns[i].Width = FIFO_reg_db.Width / 5;
             }
+            #endregion
+            #region New FIFO reg db
+            New_FIFO_db.RowHeadersVisible = false;
+            New_FIFO_db.Columns.Add("NUM", "NUM");
+            New_FIFO_db.Columns[0].Width = 60;
+            for (int i = 0; i < 16; i++) {
+                
+                New_FIFO_db.Columns.Add("S"+i.ToString(), "S" + i.ToString());
+                New_FIFO_db.Columns[i+1].Width = 60;
+            }
+
             #endregion
         }
         SerialPort sp1 = new SerialPort();
@@ -209,7 +220,7 @@ namespace Uart_AP
             Set_EN_btn.Enabled = false;
             EN_1_rbn.Checked = true;
             FIFO_reg_db.Rows.Clear();
-          
+            FIFO_Read_btn.Enabled = false;
             sp_t = new Thread(new ThreadStart(callback_method));
             sp_t.Start();
 
@@ -247,20 +258,22 @@ namespace Uart_AP
                     Console.WriteLine(rs[0]);
                     if ((reg[39] & 0x01) == 0)
                     {
+                        Thread.Sleep(100);
                         BeginInvoke(new MethodInvoker(() => {
                             EN_0_rbn.Checked = true;
                             Set_EN_btn.Enabled = true;
                             Get_value_btn.Enabled = true;
                             Write_all_btn.Enabled = true;
                             FIFO_Read_btn.Enabled = true;
+
                         }));
-                     //   MessageBox.Show("ENBLE OK");
                         break;
                     }
                 }
             }
 
         }
+        DataTable dt = new DataTable("table");
         private void Rst_FIFO_btn_Click(object sender, EventArgs e)
         {
             try
@@ -282,12 +295,86 @@ namespace Uart_AP
         }
         private void FIFO_Read_btn_Click(object sender, EventArgs e)
         {
+            //dt = new DataTable("table");
+
+            //FIFO_Read_btn.Enabled = false;
+            //    int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
+            //                        (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
+
+
+            //    dt.Columns.Add(new DataColumn("NUM", Type.GetType("System.String")));
+            //    dt.Columns.Add(new DataColumn("ADC01", Type.GetType("System.String")));
+            //    dt.Columns.Add(new DataColumn("ADC02", Type.GetType("System.String")));
+            //    dt.Columns.Add(new DataColumn("ADC03", Type.GetType("System.String")));
+            //    dt.Columns.Add(new DataColumn("ADC04", Type.GetType("System.String")));
+
+
+            //    for (int i = 0; i < (reg[5 * 3] + 5) * reg[11 * 3]; i++) {
+            //        DataRow dr = dt.NewRow();
+
+            //        dt.Rows.Add(dr);
+            //    }
+
+            //    for (int i = 0; i < 4; i++)
+            //    {
+            //        if ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0)// odd
+            //        {
+            //            byte[] sw = new byte[] { (byte)(15 + i + 128) };
+            //            byte[] rs = new byte[3];
+            //            for (int j = 0; j < read_times - 1; j++)
+            //            {
+            //                sp1.Write(sw, 0, sw.Length);
+            //                Thread.Sleep(5);
+            //                int sc = sp1.Read(rs, 0, rs.Length);
+            //                dt.Rows[j * 2][0] = j * 2;
+            //                dt.Rows[j * 2 + 1][0] = j * 2 + 1;
+            //                dt.Rows[j * 2][i + 1] = rs[0] + (rs[1] % 16) * 256;
+            //                dt.Rows[j * 2 + 1][i + 1] = rs[2] * 16 + (rs[1] / 16);
+            //            }
+            //            sp1.Write(sw, 0, sw.Length);
+            //            Thread.Sleep(5);
+            //            int sc_odd = sp1.Read(rs, 0, rs.Length);
+            //            dt.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1][i] = rs[0] + (rs[1] % 16) * 256;
+            //            dt.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1][0] = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
+
+            //        }
+            //        else
+            //        {
+            //            byte[] sw = new byte[] { (byte)(15 + i + 128) };
+            //            byte[] rs = new byte[3];
+            //            for (int j = 0; j < read_times; j++)
+            //            {
+            //                sp1.Write(sw, 0, sw.Length);
+            //                Thread.Sleep(5);
+            //                int sc = sp1.Read(rs, 0, rs.Length);
+            //                dt.Rows[j * 2][i + 1] = rs[0] + (rs[1] % 16) * 256;
+            //                dt.Rows[j * 2 + 1][i + 1] = rs[2] * 16 + (rs[1] / 16);
+            //                dt.Rows[j * 2][0] = j * 2;
+            //                dt.Rows[j * 2 + 1][0] = j * 2 + 1;
+            //            }
+            //        }
+            //    }
+            //    FIFO_reg_db.DataSource = dt;
+            //    New_FIFO_db.RowCount = reg[11 * 3];
+            //    for (int i = 0; i < reg[11 * 3]; i++)
+            //    {
+            //        New_FIFO_db.Rows[i].Cells[0].Value = i;
+            //        for (int j = 0; j < 4; j++)
+            //        {
+            //            New_FIFO_db.Rows[i].Cells[j * 4 + 1].Value = FIFO_reg_db.Rows[i * 5 + 1].Cells[j + 1].Value;
+            //            New_FIFO_db.Rows[i].Cells[j * 4 + 2].Value = FIFO_reg_db.Rows[i * 5 + 2].Cells[j + 1].Value;
+            //            New_FIFO_db.Rows[i].Cells[j * 4 + 3].Value = FIFO_reg_db.Rows[i * 5 + 3].Cells[j + 1].Value;
+            //            New_FIFO_db.Rows[i].Cells[j * 4 + 4].Value = FIFO_reg_db.Rows[i * 5 + 4].Cells[j + 1].Value;
+            //        }
+            //    }
+
+
+
             try
             {
                 FIFO_Read_btn.Enabled = false;
                 int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
                                     (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
-            //    MessageBox.Show(read_times.ToString());
                 FIFO_reg_db.RowCount = (reg[5 * 3] + 5) * reg[11 * 3];
                 for (int i = 0; i < 4; i++)
                 {
@@ -298,15 +385,15 @@ namespace Uart_AP
                         for (int j = 0; j < read_times - 1; j++)
                         {
                             sp1.Write(sw, 0, sw.Length);
-                            Thread.Sleep(10);
+                            Thread.Sleep(5);
                             int sc = sp1.Read(rs, 0, rs.Length);
-                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j*2;
-                            FIFO_reg_db.Rows[j * 2+1].Cells[0].Value = j * 2+1;
-                            FIFO_reg_db.Rows[j * 2].Cells[i+1].Value = rs[0] + (rs[1] % 16) * 256;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i+1].Value = rs[2] * 16 + (rs[1] / 16);
+                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
+                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
                         }
                         sp1.Write(sw, 0, sw.Length);
-                        Thread.Sleep(10);
+                        Thread.Sleep(5);
                         int sc_odd = sp1.Read(rs, 0, rs.Length);
                         FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[i].Value = rs[0] + (rs[1] % 16) * 256;
                         FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[0].Value = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
@@ -319,20 +406,34 @@ namespace Uart_AP
                         for (int j = 0; j < read_times; j++)
                         {
                             sp1.Write(sw, 0, sw.Length);
-                            Thread.Sleep(10);
+                            Thread.Sleep(5);
                             int sc = sp1.Read(rs, 0, rs.Length);
-                            FIFO_reg_db.Rows[j * 2].Cells[i+1].Value = rs[0] + (rs[1] % 16) * 256;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i+1].Value = rs[2] * 16 + (rs[1] / 16);
+                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
                             FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
                             FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
                         }
                     }
                 }
+                New_FIFO_db.RowCount = reg[11 * 3];
+                for (int i = 0; i < reg[11 * 3]; i++)
+                {
+                    New_FIFO_db.Rows[i].Cells[0].Value = i;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 1].Value = FIFO_reg_db.Rows[i * 5 + 1].Cells[j + 1].Value;
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 2].Value = FIFO_reg_db.Rows[i * 5 + 2].Cells[j + 1].Value;
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 3].Value = FIFO_reg_db.Rows[i * 5 + 3].Cells[j + 1].Value;
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 4].Value = FIFO_reg_db.Rows[i * 5 + 4].Cells[j + 1].Value;
+                    }
+                }
+
             }
             catch (Exception ex)
             {
 
             }
+
         }
         #region En
         private void EN_0_rbn_CheckedChanged(object sender, EventArgs e)
@@ -653,9 +754,12 @@ namespace Uart_AP
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            int db_y = FIFO_reg_db.Location.Y;
-            int db_size_x = FIFO_reg_db.Size.Width;
-            FIFO_reg_db.Size = new Size(db_size_x,this.Height-50-db_y);
+
+            int tabc_y = tabControl2.Location.Y;
+            int tabc_x = tabControl2.Size.Width;
+
+            tabControl2.Size = new Size(tabc_x, this.Height - 50 - tabc_y);
+            FIFO_reg_db.Size = new Size(FIFO_reg_db.Width, tabControl2.Size.Height - 50);
         }
 
         private void comportToolStripMenuItem_Click(object sender, EventArgs e)
