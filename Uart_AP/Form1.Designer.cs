@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.comportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +84,19 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.New_FIFO_db = new System.Windows.Forms.DataGridView();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.all_sence_data_db = new System.Windows.Forms.DataGridView();
+            this.All_Read_btn = new System.Windows.Forms.Button();
+            this.Times_tb = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.PI_rtn = new System.Windows.Forms.RadioButton();
+            this.PI3_rbn = new System.Windows.Forms.RadioButton();
+            this.Caluate_btn = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.savecsvToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -97,6 +111,10 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.New_FIFO_db)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.all_sence_data_db)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -114,7 +132,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.comportToolStripMenuItem,
             this.testToolStripMenuItem,
-            this.savecsvToolStripMenuItem});
+            this.savecsvToolStripMenuItem,
+            this.sToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -628,6 +647,7 @@
             // 
             this.tabControl2.Controls.Add(this.tabPage3);
             this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Controls.Add(this.tabPage5);
             this.tabControl2.Location = new System.Drawing.Point(489, 27);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
@@ -665,11 +685,137 @@
             this.New_FIFO_db.Size = new System.Drawing.Size(748, 518);
             this.New_FIFO_db.TabIndex = 0;
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.all_sence_data_db);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(761, 533);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "Continue Times";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // all_sence_data_db
+            // 
+            this.all_sence_data_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.all_sence_data_db.Location = new System.Drawing.Point(6, 7);
+            this.all_sence_data_db.Name = "all_sence_data_db";
+            this.all_sence_data_db.RowTemplate.Height = 24;
+            this.all_sence_data_db.Size = new System.Drawing.Size(748, 518);
+            this.all_sence_data_db.TabIndex = 1;
+            this.all_sence_data_db.MouseDown += new System.Windows.Forms.MouseEventHandler(this.all_sence_data_db_MouseDown);
+            // 
+            // All_Read_btn
+            // 
+            this.All_Read_btn.Location = new System.Drawing.Point(39, 448);
+            this.All_Read_btn.Name = "All_Read_btn";
+            this.All_Read_btn.Size = new System.Drawing.Size(69, 33);
+            this.All_Read_btn.TabIndex = 8;
+            this.All_Read_btn.Text = "Read";
+            this.All_Read_btn.UseVisualStyleBackColor = true;
+            this.All_Read_btn.Click += new System.EventHandler(this.All_Read_btn_Click);
+            // 
+            // Times_tb
+            // 
+            this.Times_tb.Location = new System.Drawing.Point(119, 455);
+            this.Times_tb.Name = "Times_tb";
+            this.Times_tb.Size = new System.Drawing.Size(89, 22);
+            this.Times_tb.TabIndex = 9;
+            this.Times_tb.Text = "10";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(214, 458);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(33, 12);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "Times";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.PI_rtn);
+            this.groupBox5.Controls.Add(this.PI3_rbn);
+            this.groupBox5.Location = new System.Drawing.Point(39, 487);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(132, 44);
+            this.groupBox5.TabIndex = 11;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Param";
+            // 
+            // PI_rtn
+            // 
+            this.PI_rtn.AutoSize = true;
+            this.PI_rtn.Checked = true;
+            this.PI_rtn.Location = new System.Drawing.Point(10, 20);
+            this.PI_rtn.Name = "PI_rtn";
+            this.PI_rtn.Size = new System.Drawing.Size(33, 16);
+            this.PI_rtn.TabIndex = 3;
+            this.PI_rtn.TabStop = true;
+            this.PI_rtn.Text = "PI";
+            this.PI_rtn.UseVisualStyleBackColor = true;
+            this.PI_rtn.CheckedChanged += new System.EventHandler(this.PI_rtn_CheckedChanged);
+            // 
+            // PI3_rbn
+            // 
+            this.PI3_rbn.AutoSize = true;
+            this.PI3_rbn.Location = new System.Drawing.Point(67, 20);
+            this.PI3_rbn.Name = "PI3_rbn";
+            this.PI3_rbn.Size = new System.Drawing.Size(42, 16);
+            this.PI3_rbn.TabIndex = 2;
+            this.PI3_rbn.Text = "PI/3";
+            this.PI3_rbn.UseVisualStyleBackColor = true;
+            this.PI3_rbn.CheckedChanged += new System.EventHandler(this.PI3_rbn_CheckedChanged);
+            // 
+            // Caluate_btn
+            // 
+            this.Caluate_btn.Location = new System.Drawing.Point(178, 498);
+            this.Caluate_btn.Name = "Caluate_btn";
+            this.Caluate_btn.Size = new System.Drawing.Size(69, 33);
+            this.Caluate_btn.TabIndex = 12;
+            this.Caluate_btn.Text = "Caluate";
+            this.Caluate_btn.UseVisualStyleBackColor = true;
+            this.Caluate_btn.Click += new System.EventHandler(this.Caluate_btn_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(253, 451);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(170, 26);
+            this.progressBar1.TabIndex = 13;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.savecsvToolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(124, 26);
+            // 
+            // savecsvToolStripMenuItem1
+            // 
+            this.savecsvToolStripMenuItem1.Name = "savecsvToolStripMenuItem1";
+            this.savecsvToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.savecsvToolStripMenuItem1.Text = "Save.csv";
+            this.savecsvToolStripMenuItem1.Click += new System.EventHandler(this.savecsvToolStripMenuItem1_Click);
+            // 
+            // sToolStripMenuItem
+            // 
+            this.sToolStripMenuItem.Name = "sToolStripMenuItem";
+            this.sToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sToolStripMenuItem.Text = "s";
+            this.sToolStripMenuItem.Click += new System.EventHandler(this.sToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1270, 598);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.Caluate_btn);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.Times_tb);
+            this.Controls.Add(this.All_Read_btn);
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.Rst_FIFO_btn);
             this.Controls.Add(this.FIFO_Read_btn);
@@ -706,6 +852,11 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.New_FIFO_db)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.all_sence_data_db)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -768,6 +919,19 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataGridView New_FIFO_db;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button All_Read_btn;
+        private System.Windows.Forms.TextBox Times_tb;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.DataGridView all_sence_data_db;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton PI_rtn;
+        private System.Windows.Forms.RadioButton PI3_rbn;
+        private System.Windows.Forms.Button Caluate_btn;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem savecsvToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem sToolStripMenuItem;
     }
 }
 

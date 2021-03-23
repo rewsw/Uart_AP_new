@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Csv_class.cs" />
+    <Compile Include="FIR_param.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

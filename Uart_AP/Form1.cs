@@ -19,10 +19,15 @@ namespace Uart_AP
             InitializeComponent();
         }
         byte[] reg = new byte[42];
+        public enum FIR_pi {
+            PI,PI3
+        }
+        FIR_pi FIR_p = FIR_pi.PI;
         private void Form1_Load(object sender, EventArgs e)
         {
             //Console.WriteLine(sp1.ReadTimeout);
             KeyPreview = true;
+            tabControl1.SelectedIndex = 1;
             string[] port_st = SerialPort.GetPortNames();
             for(int i = 0; i < port_st.Length; i++)
             {
@@ -64,6 +69,18 @@ namespace Uart_AP
                 
                 New_FIFO_db.Columns.Add("S"+i.ToString(), "S" + i.ToString());
                 New_FIFO_db.Columns[i+1].Width = 60;
+            }
+
+            #endregion
+            #region all FIFO reg db
+            all_sence_data_db.RowHeadersVisible = false;
+            all_sence_data_db.Columns.Add("NUM", "NUM");
+            all_sence_data_db.Columns[0].Width = 60;
+            for (int i = 0; i < 16; i++)
+            {
+
+                all_sence_data_db.Columns.Add("S" + i.ToString(), "S" + i.ToString());
+                all_sence_data_db.Columns[i + 1].Width = 60;
             }
 
             #endregion
@@ -293,28 +310,118 @@ namespace Uart_AP
 
             }
         }
+        private void FIFO_Read() {
+            
+        }
         private void FIFO_Read_btn_Click(object sender, EventArgs e)
         {
-            //dt = new DataTable("table");
 
-            //FIFO_Read_btn.Enabled = false;
+    
+                FIFO_Read_btn.Enabled = false;
+                int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
+                                    (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
+                FIFO_reg_db.RowCount = (reg[5 * 3] + 5) * reg[11 * 3];
+                int[,] data = new int[int.Parse(reg0x0b_tb.Text), 16];
+                for (int i = 0; i < 4; i++)
+                {
+                    if ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0)// odd
+                    {
+                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
+                        byte[] rs = new byte[3];
+                        int ptr = 0;
+                        for (int j = 0; j < read_times - 1; j++)
+                        {
+                            sp1.Write(sw, 0, sw.Length);
+                            Thread.Sleep(5);
+                            int sc = sp1.Read(rs, 0, rs.Length);
+                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
+                            
+                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
+                            if ((ptr % 5) != 0)
+                            {
+                                //   Console.WriteLine(j / 5 + " " + (i * 4 + (ptr % 5) - 1));
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                            }
+                            ptr++;
+                            if ((ptr % 5) != 0)
+                            {
+                                //    Console.WriteLine(j / 5 + " " + (i * 4 + (ptr % 5) - 1));
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                            }
+                            ptr++;
+
+                        }
+                        sp1.Write(sw, 0, sw.Length);
+                        Thread.Sleep(5);
+                        int sc_odd = sp1.Read(rs, 0, rs.Length);
+                        FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[i].Value = rs[0] + (rs[1] % 16) * 256;
+                        FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[0].Value = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
+                        if ((ptr % 5) != 0)
+                        {
+                            data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                        }
+                        ptr++;
+                        if ((ptr % 5) != 0)
+                        {
+                            data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                        }
+                        ptr++;
+
+                    }
+                    else
+                    {
+                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
+                        byte[] rs = new byte[3];
+                        int ptr = 0;
+                        for (int j = 0; j < read_times; j++)
+                        {
+                            sp1.Write(sw, 0, sw.Length);
+                            Thread.Sleep(5);
+                            int sc = sp1.Read(rs, 0, rs.Length);
+                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
+                           
+                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
+                            FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                            }
+                            ptr++;
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                            }
+                            ptr++;
+                        }
+                    }
+                }
+                New_FIFO_db.RowCount = reg[11 * 3];
+                for (int i = 0; i < reg[11 * 3]; i++)
+                {
+                    New_FIFO_db.Rows[i].Cells[0].Value = i;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        FIFO_reg_db.Rows[i * 5 + 1].Cells[j + 1].Style.BackColor  =Color.AliceBlue;
+                        FIFO_reg_db.Rows[i * 5 + 2].Cells[j + 1].Style.BackColor = Color.AliceBlue;
+                        FIFO_reg_db.Rows[i * 5 + 3].Cells[j + 1].Style.BackColor = Color.AliceBlue;
+                        FIFO_reg_db.Rows[i * 5 + 4].Cells[j + 1].Style.BackColor = Color.AliceBlue;
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 1].Value = data[i, j * 4  ];
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 2].Value = data[i, j * 4+1];
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 3].Value = data[i, j * 4+2];
+                        New_FIFO_db.Rows[i].Cells[j * 4 + 4].Value = data[i, j * 4+3];
+                    }
+                }
+
+          
+            //try
+            //{
+            //    FIFO_Read_btn.Enabled = false;
             //    int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
             //                        (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
-
-
-            //    dt.Columns.Add(new DataColumn("NUM", Type.GetType("System.String")));
-            //    dt.Columns.Add(new DataColumn("ADC01", Type.GetType("System.String")));
-            //    dt.Columns.Add(new DataColumn("ADC02", Type.GetType("System.String")));
-            //    dt.Columns.Add(new DataColumn("ADC03", Type.GetType("System.String")));
-            //    dt.Columns.Add(new DataColumn("ADC04", Type.GetType("System.String")));
-
-
-            //    for (int i = 0; i < (reg[5 * 3] + 5) * reg[11 * 3]; i++) {
-            //        DataRow dr = dt.NewRow();
-
-            //        dt.Rows.Add(dr);
-            //    }
-
+            //    FIFO_reg_db.RowCount = (reg[5 * 3] + 5) * reg[11 * 3];
             //    for (int i = 0; i < 4; i++)
             //    {
             //        if ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0)// odd
@@ -326,16 +433,16 @@ namespace Uart_AP
             //                sp1.Write(sw, 0, sw.Length);
             //                Thread.Sleep(5);
             //                int sc = sp1.Read(rs, 0, rs.Length);
-            //                dt.Rows[j * 2][0] = j * 2;
-            //                dt.Rows[j * 2 + 1][0] = j * 2 + 1;
-            //                dt.Rows[j * 2][i + 1] = rs[0] + (rs[1] % 16) * 256;
-            //                dt.Rows[j * 2 + 1][i + 1] = rs[2] * 16 + (rs[1] / 16);
+            //                FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
+            //                FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
+            //                FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+            //                FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
             //            }
             //            sp1.Write(sw, 0, sw.Length);
             //            Thread.Sleep(5);
             //            int sc_odd = sp1.Read(rs, 0, rs.Length);
-            //            dt.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1][i] = rs[0] + (rs[1] % 16) * 256;
-            //            dt.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1][0] = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
+            //            FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[i].Value = rs[0] + (rs[1] % 16) * 256;
+            //            FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[0].Value = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
 
             //        }
             //        else
@@ -347,14 +454,13 @@ namespace Uart_AP
             //                sp1.Write(sw, 0, sw.Length);
             //                Thread.Sleep(5);
             //                int sc = sp1.Read(rs, 0, rs.Length);
-            //                dt.Rows[j * 2][i + 1] = rs[0] + (rs[1] % 16) * 256;
-            //                dt.Rows[j * 2 + 1][i + 1] = rs[2] * 16 + (rs[1] / 16);
-            //                dt.Rows[j * 2][0] = j * 2;
-            //                dt.Rows[j * 2 + 1][0] = j * 2 + 1;
+            //                FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
+            //                FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
+            //                FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
+            //                FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
             //            }
             //        }
             //    }
-            //    FIFO_reg_db.DataSource = dt;
             //    New_FIFO_db.RowCount = reg[11 * 3];
             //    for (int i = 0; i < reg[11 * 3]; i++)
             //    {
@@ -368,71 +474,11 @@ namespace Uart_AP
             //        }
             //    }
 
+            //}
+            //catch (Exception ex)
+            //{
 
-
-            try
-            {
-                FIFO_Read_btn.Enabled = false;
-                int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
-                                    (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
-                FIFO_reg_db.RowCount = (reg[5 * 3] + 5) * reg[11 * 3];
-                for (int i = 0; i < 4; i++)
-                {
-                    if ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0)// odd
-                    {
-                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
-                        byte[] rs = new byte[3];
-                        for (int j = 0; j < read_times - 1; j++)
-                        {
-                            sp1.Write(sw, 0, sw.Length);
-                            Thread.Sleep(5);
-                            int sc = sp1.Read(rs, 0, rs.Length);
-                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
-                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
-                        }
-                        sp1.Write(sw, 0, sw.Length);
-                        Thread.Sleep(5);
-                        int sc_odd = sp1.Read(rs, 0, rs.Length);
-                        FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[i].Value = rs[0] + (rs[1] % 16) * 256;
-                        FIFO_reg_db.Rows[(reg[5 * 3] + 5) * reg[11 * 3] - 1].Cells[0].Value = (reg[5 * 3] + 5) * reg[11 * 3] - 1;
-
-                    }
-                    else
-                    {
-                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
-                        byte[] rs = new byte[3];
-                        for (int j = 0; j < read_times; j++)
-                        {
-                            sp1.Write(sw, 0, sw.Length);
-                            Thread.Sleep(5);
-                            int sc = sp1.Read(rs, 0, rs.Length);
-                            FIFO_reg_db.Rows[j * 2].Cells[i + 1].Value = rs[0] + (rs[1] % 16) * 256;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[i + 1].Value = rs[2] * 16 + (rs[1] / 16);
-                            FIFO_reg_db.Rows[j * 2].Cells[0].Value = j * 2;
-                            FIFO_reg_db.Rows[j * 2 + 1].Cells[0].Value = j * 2 + 1;
-                        }
-                    }
-                }
-                New_FIFO_db.RowCount = reg[11 * 3];
-                for (int i = 0; i < reg[11 * 3]; i++)
-                {
-                    New_FIFO_db.Rows[i].Cells[0].Value = i;
-                    for (int j = 0; j < 4; j++)
-                    {
-                        New_FIFO_db.Rows[i].Cells[j * 4 + 1].Value = FIFO_reg_db.Rows[i * 5 + 1].Cells[j + 1].Value;
-                        New_FIFO_db.Rows[i].Cells[j * 4 + 2].Value = FIFO_reg_db.Rows[i * 5 + 2].Cells[j + 1].Value;
-                        New_FIFO_db.Rows[i].Cells[j * 4 + 3].Value = FIFO_reg_db.Rows[i * 5 + 3].Cells[j + 1].Value;
-                        New_FIFO_db.Rows[i].Cells[j * 4 + 4].Value = FIFO_reg_db.Rows[i * 5 + 4].Cells[j + 1].Value;
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-            }
+            //}
 
         }
         #region En
@@ -776,6 +822,250 @@ namespace Uart_AP
                 comportToolStripMenuItem.DropDownItems.Add(port_st[i]);
                 comportToolStripMenuItem.DropDownItems[i].Click += dropdownitem_click;
             }
+        }
+
+        Thread all_read_t;
+        private void All_Read_btn_Click(object sender, EventArgs e)
+        {
+            progressBar1.Maximum = int.Parse(Times_tb.Text);
+            all_sence_data_db.Rows.Clear();
+            all_read_t = new Thread(new ThreadStart(all_Read_processing));
+            all_read_t.Start();
+        }
+        List<int[,]> all_Sence_data = new List<int[,]>();
+        private void all_Read_processing() {
+            int times = int.Parse(Times_tb.Text);
+            all_Sence_data.Clear();
+            for (int ii = 0; ii < times; ii++) {
+                if (sp1.IsOpen)
+                {
+                    while (sp1.BytesToRead > 0)
+                    {
+                        sp1.ReadByte();
+                    }
+                    byte[] write_reg = new byte[4];
+                    write_reg[0] = (byte)0x0d;
+                    reg[39] = 0x01;
+                    write_reg[1] = reg[39];
+                    write_reg[2] = reg[40];
+                    write_reg[3] = reg[41];
+                    sp1.Write(write_reg, 0, write_reg.Length);
+                }
+                Thread.Sleep(5);
+                #region get data from jamie
+                while (true)
+                {
+                    if (sp1.IsOpen)
+                    {
+                        byte[] sw = new byte[] { (byte)(13 + 128) };
+
+                        sp1.Write(sw, 0, sw.Length);
+                        Thread.Sleep(10);
+                        byte[] rs = new byte[3];
+                        int sc = sp1.Read(rs, 0, rs.Length);
+                        reg[39] = rs[0];
+                        reg[40] = rs[1];
+                        reg[41] = rs[2];
+                        Console.WriteLine(rs[0]);
+                        if ((reg[39] & 0x01) == 0)
+                        {
+                            Thread.Sleep(10);
+                            break;
+                        }
+                    }
+                }
+                #endregion
+                int read_times = ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0) ?
+                                  (reg[5 * 3] + 5) * reg[11 * 3] / 2 + 1 : ((reg[5 * 3] + 5) * reg[11 * 3] / 2);
+                int[,] data = new int[int.Parse(reg0x0b_tb.Text), 16];
+                for (int i = 0; i < 4; i++)
+                {
+                    if ((reg[5 * 3] + 5) * reg[11 * 3] % 2 != 0)// odd
+                    {
+                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
+                        byte[] rs = new byte[3];
+                        int ptr = 0;
+                        for (int j = 0; j < read_times - 1; j++)
+                        {
+                            sp1.Write(sw, 0, sw.Length);
+                            Thread.Sleep(5);
+                            int sc = sp1.Read(rs, 0, rs.Length);
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                            }
+                            ptr++;
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                            }
+                            ptr++;
+
+                        }
+                        sp1.Write(sw, 0, sw.Length);
+                        Thread.Sleep(5);
+                        int sc_odd = sp1.Read(rs, 0, rs.Length);
+                        if ((ptr % 5) != 0)
+                        {
+                            data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                        }
+                        ptr++;
+                        if ((ptr % 5) != 0)
+                        {
+                            data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                        }
+                        ptr++;
+                    }
+                    else
+                    {
+                        byte[] sw = new byte[] { (byte)(15 + i + 128) };
+                        byte[] rs = new byte[3];
+                        int ptr = 0;
+                        for (int j = 0; j < read_times; j++)
+                        {
+                            sp1.Write(sw, 0, sw.Length);
+                            Thread.Sleep(5);
+                            int sc = sp1.Read(rs, 0, rs.Length);
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[0] + (rs[1] % 16) * 256;
+                            }
+                            ptr++;
+                            if ((ptr % 5) != 0)
+                            {
+                                data[ptr / 5, i * 4 + ptr % 5 - 1] = rs[2] * 16 + (rs[1] / 16);
+                            }
+                            ptr++;
+                        }
+                    }
+                }
+                all_Sence_data.Add(data);
+                progressBar1.BeginInvoke(new MethodInvoker(() => {
+                    progressBar1.Value = ii;
+                }));
+            }
+            BeginInvoke(new MethodInvoker(() => {
+                all_sence_data_db.RowCount = times * (int.Parse(reg0x0b_tb.Text) + 1);
+                
+                for (int i = 0; i < times; i++) {
+                    for (int j = 0; j < int.Parse(reg0x0b_tb.Text); j++) {
+                        all_sence_data_db.Rows[i * (int.Parse(reg0x0b_tb.Text)+1) + j].Cells[0].Value = j;
+                        for (int k = 1; k <17 ; k++)
+                        {
+                            all_sence_data_db.Rows[i * (int.Parse(reg0x0b_tb.Text)+1) + j].Cells[k].Value = all_Sence_data[i][j, k - 1];
+                        
+                        }
+                    }
+                }
+            }));
+        }
+        #region FIR_pi
+        private void PI_rtn_CheckedChanged(object sender, EventArgs e)
+        {
+            FIR_p = FIR_pi.PI;
+        }
+
+        private void PI3_rbn_CheckedChanged(object sender, EventArgs e)
+        {
+            FIR_p = FIR_pi.PI3;
+        }
+
+        #endregion
+
+        private void Caluate_btn_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < int.Parse(Times_tb.Text); i++)
+            {
+                for (int k = 1; k < 17; k++) //x
+                {
+                    int sum = 0;
+                    int ans = 0;
+                    switch (int.Parse(reg0x0b_tb.Text)) {
+                        case 6:
+                            for (int j = 0; j < int.Parse(reg0x0b_tb.Text); j++)
+                            {
+                                if (FIR_p == FIR_pi.PI)
+                                {
+                                    sum += FIR_param.pi_6p[j] * all_Sence_data[i][j, k - 1];
+                                }
+                                else if (FIR_p == FIR_pi.PI3)
+                                {
+                                    sum += FIR_param.pi_3_6p[j] * all_Sence_data[i][j, k - 1];
+                                }
+                            }
+                           
+                            ans = sum >> 12;
+                            break;
+                        case 18:
+                            for (int j = 0; j < int.Parse(reg0x0b_tb.Text); j++)
+                            {
+                                if (FIR_p == FIR_pi.PI)
+                                {
+                                    sum += FIR_param.pi_18p[j] * all_Sence_data[i][j, k - 1];
+                                }
+                                else if (FIR_p == FIR_pi.PI3)
+                                {
+                                    sum += FIR_param.pi_3_18p[j] * all_Sence_data[i][j, k - 1];
+                                }
+                            }
+                            ans = sum >> 14;
+                            break;
+                        default:
+                            break;
+
+                    }
+                       
+                    all_sence_data_db.Rows[i * (int.Parse(reg0x0b_tb.Text) + 1)+ int.Parse(reg0x0b_tb.Text)].Cells[k].Value = ans.ToString();
+                    all_sence_data_db.Rows[i * (int.Parse(reg0x0b_tb.Text) + 1) + int.Parse(reg0x0b_tb.Text)].Cells[k].Style.BackColor = Color.MediumVioletRed;
+                }
+            }
+        }
+
+        private void all_sence_data_db_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) {
+              //  Console.WriteLine(tabControl2.Location.X + " "+tabControl2.Location.Y);
+                contextMenuStrip1.Show(MousePosition) ;
+            }
+        }
+
+        private void savecsvToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog save = new SaveFileDialog())
+            {
+                save.Filter = "Csv|*.csv";
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    String csv_path = save.FileName;
+                    StreamWriter swd = new StreamWriter(csv_path, true);
+                    StringBuilder sbd = new StringBuilder();
+
+                    sbd.Append("Num");//.Append(",");//.Append("S0").Append(",").Append("S1").Append(",").Append("ADC2_DAT").Append(",").Append("ADC3_DAT");
+                    for (int i = 0; i < 16; i++) {
+                        sbd.Append(",").Append("S" + i.ToString());
+                    }
+                    swd.WriteLine(sbd);
+                    for (int i = 0; i < all_sence_data_db.Rows.Count; i++)
+                    {
+                        sbd.Clear();
+                        for (int j = 0; j < 17; j++)
+                        {
+                            sbd.Append(all_sence_data_db.Rows[i].Cells[j].Value).Append(",");
+                        }
+                        swd.WriteLine(sbd);
+                        swd.Flush();
+                    }
+                    swd.Close();
+                }
+            }
+        }
+
+        private void sToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int a = 7;
+            a >>= 1;
+            Console.WriteLine(a);
+
         }
     }
 }
