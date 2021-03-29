@@ -77,7 +77,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Write_all_btn = new System.Windows.Forms.Button();
             this.Get_value_btn = new System.Windows.Forms.Button();
-            this.Running_btn = new System.Windows.Forms.DataGridView();
+            this.Data_db = new System.Windows.Forms.DataGridView();
             this.Set_EN_btn = new System.Windows.Forms.Button();
             this.Rst_FIFO_btn = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
@@ -88,6 +88,9 @@
             this.all_sence_data_db = new System.Windows.Forms.DataGridView();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.FIR_db = new System.Windows.Forms.DataGridView();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.Running_picbox = new System.Windows.Forms.PictureBox();
+            this.Running_db = new System.Windows.Forms.DataGridView();
             this.All_Read_btn = new System.Windows.Forms.Button();
             this.Times_tb = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -101,8 +104,9 @@
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Running_time_btn = new System.Windows.Forms.Button();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.Running_db = new System.Windows.Forms.DataGridView();
+            this.Stop_btn = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -112,7 +116,7 @@
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Running_btn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Data_db)).BeginInit();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -121,11 +125,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.all_sence_data_db)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FIR_db)).BeginInit();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Running_picbox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Running_db)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
-            this.tabPage7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Running_db)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -604,7 +611,7 @@
             // 
             // Write_all_btn
             // 
-            this.Write_all_btn.Location = new System.Drawing.Point(119, 411);
+            this.Write_all_btn.Location = new System.Drawing.Point(119, 407);
             this.Write_all_btn.Name = "Write_all_btn";
             this.Write_all_btn.Size = new System.Drawing.Size(70, 31);
             this.Write_all_btn.TabIndex = 2;
@@ -614,7 +621,7 @@
             // 
             // Get_value_btn
             // 
-            this.Get_value_btn.Location = new System.Drawing.Point(38, 411);
+            this.Get_value_btn.Location = new System.Drawing.Point(38, 406);
             this.Get_value_btn.Name = "Get_value_btn";
             this.Get_value_btn.Size = new System.Drawing.Size(70, 31);
             this.Get_value_btn.TabIndex = 1;
@@ -622,28 +629,28 @@
             this.Get_value_btn.UseVisualStyleBackColor = true;
             this.Get_value_btn.Click += new System.EventHandler(this.Get_Value_btn_Click);
             // 
-            // Running_btn
+            // Data_db
             // 
-            this.Running_btn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Running_btn.Location = new System.Drawing.Point(12, 6);
-            this.Running_btn.Name = "Running_btn";
-            this.Running_btn.RowTemplate.Height = 24;
-            this.Running_btn.Size = new System.Drawing.Size(735, 509);
-            this.Running_btn.TabIndex = 3;
+            this.Data_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Data_db.Location = new System.Drawing.Point(12, 6);
+            this.Data_db.Name = "Data_db";
+            this.Data_db.RowTemplate.Height = 24;
+            this.Data_db.Size = new System.Drawing.Size(735, 547);
+            this.Data_db.TabIndex = 3;
             // 
             // Set_EN_btn
             // 
-            this.Set_EN_btn.Location = new System.Drawing.Point(278, 411);
+            this.Set_EN_btn.Location = new System.Drawing.Point(278, 409);
             this.Set_EN_btn.Name = "Set_EN_btn";
             this.Set_EN_btn.Size = new System.Drawing.Size(195, 31);
             this.Set_EN_btn.TabIndex = 4;
-            this.Set_EN_btn.Text = "SET SATK01_EN(S)";
+            this.Set_EN_btn.Text = "Single Mode";
             this.Set_EN_btn.UseVisualStyleBackColor = true;
             this.Set_EN_btn.Click += new System.EventHandler(this.Set_EN_btn_Click);
             // 
             // Rst_FIFO_btn
             // 
-            this.Rst_FIFO_btn.Location = new System.Drawing.Point(200, 411);
+            this.Rst_FIFO_btn.Location = new System.Drawing.Point(200, 408);
             this.Rst_FIFO_btn.Name = "Rst_FIFO_btn";
             this.Rst_FIFO_btn.Size = new System.Drawing.Size(70, 31);
             this.Rst_FIFO_btn.TabIndex = 6;
@@ -661,18 +668,18 @@
             this.tabControl2.Location = new System.Drawing.Point(489, 27);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(769, 559);
+            this.tabControl2.Size = new System.Drawing.Size(769, 585);
             this.tabControl2.TabIndex = 7;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.Running_btn);
+            this.tabPage3.Controls.Add(this.Data_db);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(761, 533);
+            this.tabPage3.Size = new System.Drawing.Size(761, 559);
             this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "Old";
+            this.tabPage3.Text = "Single Data";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
@@ -681,9 +688,9 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(761, 533);
+            this.tabPage4.Size = new System.Drawing.Size(761, 559);
             this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "New";
+            this.tabPage4.Text = "Tranpose Data";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // New_FIFO_db
@@ -692,7 +699,7 @@
             this.New_FIFO_db.Location = new System.Drawing.Point(7, 9);
             this.New_FIFO_db.Name = "New_FIFO_db";
             this.New_FIFO_db.RowTemplate.Height = 24;
-            this.New_FIFO_db.Size = new System.Drawing.Size(748, 518);
+            this.New_FIFO_db.Size = new System.Drawing.Size(748, 544);
             this.New_FIFO_db.TabIndex = 0;
             // 
             // tabPage5
@@ -700,9 +707,9 @@
             this.tabPage5.Controls.Add(this.all_sence_data_db);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(761, 533);
+            this.tabPage5.Size = new System.Drawing.Size(761, 559);
             this.tabPage5.TabIndex = 2;
-            this.tabPage5.Text = "Continue Times";
+            this.tabPage5.Text = "Continue Mode Data";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // all_sence_data_db
@@ -711,7 +718,7 @@
             this.all_sence_data_db.Location = new System.Drawing.Point(6, 7);
             this.all_sence_data_db.Name = "all_sence_data_db";
             this.all_sence_data_db.RowTemplate.Height = 24;
-            this.all_sence_data_db.Size = new System.Drawing.Size(748, 518);
+            this.all_sence_data_db.Size = new System.Drawing.Size(748, 549);
             this.all_sence_data_db.TabIndex = 1;
             this.all_sence_data_db.MouseDown += new System.Windows.Forms.MouseEventHandler(this.all_sence_data_db_MouseDown);
             // 
@@ -720,7 +727,7 @@
             this.tabPage6.Controls.Add(this.FIR_db);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(761, 533);
+            this.tabPage6.Size = new System.Drawing.Size(761, 559);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "FIR_Data";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -731,13 +738,41 @@
             this.FIR_db.Location = new System.Drawing.Point(6, 7);
             this.FIR_db.Name = "FIR_db";
             this.FIR_db.RowTemplate.Height = 24;
-            this.FIR_db.Size = new System.Drawing.Size(748, 518);
+            this.FIR_db.Size = new System.Drawing.Size(748, 549);
             this.FIR_db.TabIndex = 2;
             this.FIR_db.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FIR_db_MouseDown);
             // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.Running_picbox);
+            this.tabPage7.Controls.Add(this.Running_db);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(761, 559);
+            this.tabPage7.TabIndex = 4;
+            this.tabPage7.Text = "Running Time";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // Running_picbox
+            // 
+            this.Running_picbox.Location = new System.Drawing.Point(15, 120);
+            this.Running_picbox.Name = "Running_picbox";
+            this.Running_picbox.Size = new System.Drawing.Size(731, 45);
+            this.Running_picbox.TabIndex = 2;
+            this.Running_picbox.TabStop = false;
+            // 
+            // Running_db
+            // 
+            this.Running_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Running_db.Location = new System.Drawing.Point(14, 18);
+            this.Running_db.Name = "Running_db";
+            this.Running_db.RowTemplate.Height = 24;
+            this.Running_db.Size = new System.Drawing.Size(733, 78);
+            this.Running_db.TabIndex = 1;
+            // 
             // All_Read_btn
             // 
-            this.All_Read_btn.Location = new System.Drawing.Point(39, 448);
+            this.All_Read_btn.Location = new System.Drawing.Point(8, 14);
             this.All_Read_btn.Name = "All_Read_btn";
             this.All_Read_btn.Size = new System.Drawing.Size(69, 33);
             this.All_Read_btn.TabIndex = 8;
@@ -747,7 +782,7 @@
             // 
             // Times_tb
             // 
-            this.Times_tb.Location = new System.Drawing.Point(119, 455);
+            this.Times_tb.Location = new System.Drawing.Point(83, 21);
             this.Times_tb.Name = "Times_tb";
             this.Times_tb.Size = new System.Drawing.Size(89, 22);
             this.Times_tb.TabIndex = 9;
@@ -756,7 +791,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(214, 458);
+            this.label13.Location = new System.Drawing.Point(178, 31);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(33, 12);
             this.label13.TabIndex = 10;
@@ -766,7 +801,7 @@
             // 
             this.groupBox5.Controls.Add(this.PI_rtn);
             this.groupBox5.Controls.Add(this.PI3_rbn);
-            this.groupBox5.Location = new System.Drawing.Point(39, 487);
+            this.groupBox5.Location = new System.Drawing.Point(13, 52);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(132, 44);
             this.groupBox5.TabIndex = 11;
@@ -789,7 +824,7 @@
             // PI3_rbn
             // 
             this.PI3_rbn.AutoSize = true;
-            this.PI3_rbn.Location = new System.Drawing.Point(67, 20);
+            this.PI3_rbn.Location = new System.Drawing.Point(65, 20);
             this.PI3_rbn.Name = "PI3_rbn";
             this.PI3_rbn.Size = new System.Drawing.Size(42, 16);
             this.PI3_rbn.TabIndex = 2;
@@ -799,7 +834,7 @@
             // 
             // Caluate_btn
             // 
-            this.Caluate_btn.Location = new System.Drawing.Point(178, 498);
+            this.Caluate_btn.Location = new System.Drawing.Point(152, 60);
             this.Caluate_btn.Name = "Caluate_btn";
             this.Caluate_btn.Size = new System.Drawing.Size(69, 33);
             this.Caluate_btn.TabIndex = 12;
@@ -809,7 +844,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(253, 451);
+            this.progressBar1.Location = new System.Drawing.Point(233, 17);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(170, 26);
             this.progressBar1.TabIndex = 13;
@@ -844,7 +879,7 @@
             // 
             // Running_time_btn
             // 
-            this.Running_time_btn.Location = new System.Drawing.Point(35, 537);
+            this.Running_time_btn.Location = new System.Drawing.Point(5, 20);
             this.Running_time_btn.Name = "Running_time_btn";
             this.Running_time_btn.Size = new System.Drawing.Size(136, 31);
             this.Running_time_btn.TabIndex = 14;
@@ -852,37 +887,50 @@
             this.Running_time_btn.UseVisualStyleBackColor = true;
             this.Running_time_btn.Click += new System.EventHandler(this.Running_time_btn_Click);
             // 
-            // tabPage7
+            // Stop_btn
             // 
-            this.tabPage7.Controls.Add(this.Running_db);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(761, 533);
-            this.tabPage7.TabIndex = 4;
-            this.tabPage7.Text = "Running Time";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            this.Stop_btn.Enabled = false;
+            this.Stop_btn.Location = new System.Drawing.Point(147, 19);
+            this.Stop_btn.Name = "Stop_btn";
+            this.Stop_btn.Size = new System.Drawing.Size(69, 31);
+            this.Stop_btn.TabIndex = 15;
+            this.Stop_btn.Text = "Stop";
+            this.Stop_btn.UseVisualStyleBackColor = true;
+            this.Stop_btn.Click += new System.EventHandler(this.Stop_btn_Click);
             // 
-            // Running_db
+            // groupBox6
             // 
-            this.Running_db.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Running_db.Location = new System.Drawing.Point(14, 18);
-            this.Running_db.Name = "Running_db";
-            this.Running_db.RowTemplate.Height = 24;
-            this.Running_db.Size = new System.Drawing.Size(733, 97);
-            this.Running_db.TabIndex = 1;
+            this.groupBox6.Controls.Add(this.Stop_btn);
+            this.groupBox6.Controls.Add(this.Running_time_btn);
+            this.groupBox6.Location = new System.Drawing.Point(31, 552);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(239, 60);
+            this.groupBox6.TabIndex = 16;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Auto Running";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.progressBar1);
+            this.groupBox7.Controls.Add(this.Caluate_btn);
+            this.groupBox7.Controls.Add(this.groupBox5);
+            this.groupBox7.Controls.Add(this.label13);
+            this.groupBox7.Controls.Add(this.Times_tb);
+            this.groupBox7.Controls.Add(this.All_Read_btn);
+            this.groupBox7.Location = new System.Drawing.Point(36, 444);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(421, 102);
+            this.groupBox7.TabIndex = 17;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Continue Mode";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1270, 598);
-            this.Controls.Add(this.Running_time_btn);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.Caluate_btn);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.Times_tb);
-            this.Controls.Add(this.All_Read_btn);
+            this.ClientSize = new System.Drawing.Size(1270, 618);
+            this.Controls.Add(this.groupBox7);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.Rst_FIFO_btn);
             this.Controls.Add(this.Set_EN_btn);
@@ -913,7 +961,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Running_btn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Data_db)).EndInit();
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -922,12 +970,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.all_sence_data_db)).EndInit();
             this.tabPage6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FIR_db)).EndInit();
+            this.tabPage7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Running_picbox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Running_db)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
-            this.tabPage7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Running_db)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -961,7 +1013,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox reg0x00_tb;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DataGridView Running_btn;
+        private System.Windows.Forms.DataGridView Data_db;
         private System.Windows.Forms.Button Set_EN_btn;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox reg0x0b_tb;
@@ -1009,6 +1061,10 @@
         private System.Windows.Forms.Button Running_time_btn;
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.DataGridView Running_db;
+        private System.Windows.Forms.Button Stop_btn;
+        private System.Windows.Forms.PictureBox Running_picbox;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 
