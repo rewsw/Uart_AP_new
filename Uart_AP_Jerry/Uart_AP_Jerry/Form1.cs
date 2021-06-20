@@ -28,27 +28,30 @@ namespace Uart_AP_Jerry
             if (sp.IsOpen) {
                 byte[] wr1 = new byte[5] { 0x89, 0x00, 0x00, 0x60, 0x07 };
                 byte[] wr2 = new byte[5] { 0x8a, 0x10, 0x00, 0x00, 0x00 };
-
+                DataTb.AppendText("---------------TM0 Start---------------\r\n\r\n");
                 sp.Write(wr1, 0, wr1.Length);
-                DataTb.AppendText("Send ")
+                DataTb.AppendText("Send Write RW_CTRL\r\n");
                 Thread.Sleep(5);
                 sp.Write(wr2, 0, wr2.Length);
+                DataTb.AppendText("Send Write RW_Start\r\n");
                 Thread.Sleep(5);
                 while (sp.BytesToRead > 0)
                 {
                     sp.ReadByte();
                 }
-                byte[] re1 = new byte[1] { 0x0a };
-                sp.Write(re1, 0, re1.Length);
-                Thread.Sleep(5);
+                
+                DataTb.AppendText("Poll RW_Start[0] tie Low\r\n");
                 while (true) {
+                    byte[] re1 = new byte[1] { 0x0a };
+                    sp.Write(re1, 0, re1.Length);
+                    Thread.Sleep(5);
                     byte[] rs = new byte[4];
                     int rb = sp.Read(rs, 0, rs.Length);
                     if ((rs[0] & 0x01) == 0x00) {
                         break;
                     }
                 }
-
+                DataTb.AppendText("---------------TM0 END---------------\r\n\r\n");
             }
         }
 
@@ -60,26 +63,38 @@ namespace Uart_AP_Jerry
                 byte[] RW_CTRL = new byte[5];
                 byte[] RW_Start = new byte[5];
                 if (Tm == 1) {
+                    DataTb.AppendText("---------------TM1 Start---------------\r\n\r\n");
                     RW_CTRL = new byte[5] { 0x89, 0x00, 0x00, 0x01, 0x00 };
                     RW_Start = new byte[5] { 0x8a, 0x01, 0x00, 0x00, 0x00 };
+                    sp.Write(RW_CTRL, 0, RW_CTRL.Length);
+                    DataTb.AppendText("Send Write RW_CTRL\r\n");
+                    Thread.Sleep(5);
+                    sp.Write(RW_Start, 0, RW_Start.Length);
+                    DataTb.AppendText("Send Write RW_Start\r\n");
+                    Thread.Sleep(5);
                 } else if (Tm == 2) {
+                    DataTb.AppendText("---------------TM2 Start---------------\r\n\r\n");
                     RW_CTRL = new byte[5] { 0x89, 0x00, 0x00, 0x02, 0x00 };
                     RW_Start = new byte[5] { 0x8a, 0x01, 0x00, 0x00, 0x00 };
+                    sp.Write(RW_CTRL, 0, RW_CTRL.Length);
+                    DataTb.AppendText("Send Write RW_CTRL\r\n");
+                    Thread.Sleep(5);
+                    sp.Write(RW_Start, 0, RW_Start.Length);
+                    DataTb.AppendText("Send Write RW_Start\r\n");
+                    Thread.Sleep(5);
                 }
-                sp.Write(RW_CTRL, 0, RW_CTRL.Length);
-                Thread.Sleep(5);
-                sp.Write(RW_Start, 0, RW_Start.Length);
-                Thread.Sleep(5);
+                
                 while (sp.BytesToRead > 0)
                 {
                     sp.ReadByte();
                 }
                 byte[] re1 = new byte[1] { 0x0a };
                 byte[] re2 = new byte[1] { 0x0b };
-                sp.Write(re1, 0, re1.Length);
-                Thread.Sleep(5);
+                DataTb.AppendText("Poll RW_Start[0] tie Low\r\n");
                 while (true)
                 {
+                    sp.Write(re1, 0, re1.Length);
+                    Thread.Sleep(5);
                     byte[] rs = new byte[4];
                     int rb = sp.Read(rs, 0, rs.Length);
                     if ((rs[0] & 0x01) == 0x00)
@@ -89,14 +104,19 @@ namespace Uart_AP_Jerry
                 }
                 sp.Write(re2, 0, re2.Length);
                 Thread.Sleep(5);
+                DataTb.AppendText("Read Test Counter\r\n");
                 byte[] rs2 = new byte[4];
                 int rb2 = sp.Read(rs2, 0, rs2.Length);
                 UInt32 Result = (UInt32)(rs2[0] + (rs2[1] << 8) + (rs2[2] << 16) + (rs2[3] << 24));
-                if (Result == Test_Counter) {
+                if (Result == Test_Counter) { 
+                    DataTb.AppendText("Data Right\r\n");
+                    DataTb.AppendText("---------------TM End--------------- \r\n\r\n");
                     return true;
                 }
                 else
                 {
+                    DataTb.AppendText("Data Fault\r\n");
+                    DataTb.AppendText("---------------TM End--------------- \r\n\r\n");
                     return false;
                 }
 
@@ -110,19 +130,21 @@ namespace Uart_AP_Jerry
 
         private void Read4DataFromContinuousAddress(SerialPort sp, byte address, UInt32[] Data, byte Direction) {
             if (sp.IsOpen) {
-
-
+                
                 byte[] Address = new byte[5] { 0x80, (byte)((address >> 0) & 0xFF), (byte)((address >> 8) & 0xFF),
                     (byte)((address>> 16) & 0xFF), (byte)((address >> 24) & 0xFF) };
                 sp.Write(Address, 0, Address.Length);
                 Thread.Sleep(5);
 
+                DataTb.AppendText("---------------TM3 Start---------------\r\n");
                 int index = 0;
                 while (index < 4) {
                     if ((Direction & (0x1 << index)) > 0) {
                         byte[] write_data = new byte[5] {(byte)(0x81+index), (byte)((Data[index] >> 0) & 0xFF), (byte)((Data[index] >> 8) & 0xFF),
                     (byte)((Data[index] >> 16) & 0xFF), (byte)((Data[index] >> 24) & 0xFF)};
                         sp.Write(write_data, 0, write_data.Length);
+
+                        DataTb.AppendText(string.Format("Write Data {0} --> {1:X32}\r\n",index,Data[index]));
                     }
                     Thread.Sleep(5);
                     index++;
@@ -133,18 +155,21 @@ namespace Uart_AP_Jerry
                 byte[] RW_Start = new byte[5] { 0x8a, 0x42, 0x01, 0x03, 0x00 };
                 byte[] P_RW_start = new byte[1] { 0x0a };
                 sp.Write(RW_CTRL, 0, RW_CTRL.Length);
+                DataTb.AppendText("Send Write RW_CTRL\r\n");
                 Thread.Sleep(5);
                 sp.Write(RW_Start, 0, RW_Start.Length);
+                DataTb.AppendText("Send Write RW_Start\r\n");
                 Thread.Sleep(5);
                 while (sp.BytesToRead > 0)
                 {
                     sp.ReadByte();
                 }
-                byte[] re1 = new byte[1] { 0x0a };
-                sp.Write(re1, 0, re1.Length);
-                Thread.Sleep(5);
+                DataTb.AppendText("Poll RW_Start[0] tie Low\r\n");
                 while (true)
                 {
+                    byte[] re1 = new byte[1] { 0x0a };
+                    sp.Write(re1, 0, re1.Length);
+                    Thread.Sleep(5);
                     byte[] rs = new byte[4];
                     int rb = sp.Read(rs, 0, rs.Length);
                     if ((rs[0] & 0x01) == 0x00)
@@ -171,11 +196,11 @@ namespace Uart_AP_Jerry
                     sp.Read(RData, 0, RData.Length);
                     UInt32 Decoder = hex_to_uint(RData);
                     if (Decoder == Data[index]) {
-
+                        DataTb.AppendText(string.Format("Read Data {0} <-- {1:X32} != {2:X32}\r\n", index, Decoder, Data[index]));
                     }
                     else
                     {
-
+                        DataTb.AppendText(string.Format("Read Data {0} <-- {1:X32} != {2:X32}\r\n", index, Decoder, Data[index]));
                     }
                     index++;
                 }
