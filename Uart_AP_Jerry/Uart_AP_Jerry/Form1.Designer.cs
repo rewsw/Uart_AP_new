@@ -34,10 +34,15 @@
             this.ClearBtn = new System.Windows.Forms.Button();
             this.CmdTb = new System.Windows.Forms.TextBox();
             this.DataTb = new System.Windows.Forms.TextBox();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.comPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(506, 24);
@@ -90,6 +95,21 @@
             this.DataTb.Size = new System.Drawing.Size(450, 202);
             this.DataTb.TabIndex = 5;
             // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.comPortToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            // 
+            // comPortToolStripMenuItem
+            // 
+            this.comPortToolStripMenuItem.Name = "comPortToolStripMenuItem";
+            this.comPortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.comPortToolStripMenuItem.Text = "ComPort";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -105,6 +125,8 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -118,6 +140,8 @@
         private System.Windows.Forms.Button ClearBtn;
         private System.Windows.Forms.TextBox CmdTb;
         private System.Windows.Forms.TextBox DataTb;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem comPortToolStripMenuItem;
     }
 }
 

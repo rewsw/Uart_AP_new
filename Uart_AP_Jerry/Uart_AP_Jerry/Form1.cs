@@ -30,6 +30,7 @@ namespace Uart_AP_Jerry
                 byte[] wr2 = new byte[5] { 0x8a, 0x10, 0x00, 0x00, 0x00 };
 
                 sp.Write(wr1, 0, wr1.Length);
+                DataTb.AppendText("Send ")
                 Thread.Sleep(5);
                 sp.Write(wr2, 0, wr2.Length);
                 Thread.Sleep(5);
@@ -248,6 +249,38 @@ namespace Uart_AP_Jerry
         {
             CmdTb.Clear();
             DataTb.Clear();
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            comPortToolStripMenuItem.DropDownItems.Clear();
+            string[] port_st = SerialPort.GetPortNames();
+            for (int i = 0; i < port_st.Length; i++)
+            {
+                comPortToolStripMenuItem.DropDownItems.Add(port_st[i]);
+                comPortToolStripMenuItem.DropDownItems[i].Click += dropdownitem_click;
+            }
+        }
+        private void dropdownitem_click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ToolStripMenuItem it = (System.Windows.Forms.ToolStripMenuItem)sender;
+            Console.WriteLine(it.Text);
+            try
+            {
+                _SP.BaudRate = 115200;
+                _SP.ReadTimeout = 100;
+                _SP.StopBits = StopBits.One;
+                _SP.PortName = it.Text;
+                _SP.Open();
+                if (_SP.IsOpen)
+                {
+                    MessageBox.Show("Sucessful Connect " + _SP.PortName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cant't Connect");
+            }
         }
     }
 }
