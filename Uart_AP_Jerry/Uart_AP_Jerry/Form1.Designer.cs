@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.comPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LoadCmdBtn = new System.Windows.Forms.Button();
             this.RunTestBtn = new System.Windows.Forms.Button();
             this.ClearBtn = new System.Windows.Forms.Button();
             this.CmdTb = new System.Windows.Forms.TextBox();
             this.DataTb = new System.Windows.Forms.TextBox();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comPortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,6 +48,21 @@
             this.menuStrip1.Size = new System.Drawing.Size(506, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.comPortToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            // 
+            // comPortToolStripMenuItem
+            // 
+            this.comPortToolStripMenuItem.Name = "comPortToolStripMenuItem";
+            this.comPortToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.comPortToolStripMenuItem.Text = "ComPort";
             // 
             // LoadCmdBtn
             // 
@@ -92,23 +107,9 @@
             this.DataTb.Location = new System.Drawing.Point(28, 338);
             this.DataTb.Multiline = true;
             this.DataTb.Name = "DataTb";
+            this.DataTb.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.DataTb.Size = new System.Drawing.Size(450, 202);
             this.DataTb.TabIndex = 5;
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.comPortToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
-            // 
-            // comPortToolStripMenuItem
-            // 
-            this.comPortToolStripMenuItem.Name = "comPortToolStripMenuItem";
-            this.comPortToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.comPortToolStripMenuItem.Text = "ComPort";
             // 
             // Form1
             // 
