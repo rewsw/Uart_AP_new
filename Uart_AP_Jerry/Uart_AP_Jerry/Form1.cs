@@ -211,8 +211,8 @@ namespace Uart_AP_Jerry
                     index++;
                 }
 
-
-                byte[] RW_CTRL = new byte[5] { 0x89, 0x42, 0x00, 0x03, 0x00 };
+                Console.WriteLine("Driection : " + Direction);
+                byte[] RW_CTRL = new byte[5] { 0x89, 0x42, Direction, 0x03, 0x00 };
                 byte[] RW_Start = new byte[5] { 0x8a, 0x01, 0x00, 0x00, 0x00 };
                 sp.Write(RW_CTRL, 0, RW_CTRL.Length);
                 WriteTextSafe("Send Write RW_CTRL\r\n");
@@ -411,6 +411,11 @@ namespace Uart_AP_Jerry
             {
                 MessageBox.Show("Cant't Connect");
             }
+        }
+
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            DataTb.Size = new Size(DataTb.Size.Width, this.Size.Height-DataTb.Location.Y-70);
         }
     }
 }

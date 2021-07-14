@@ -66,9 +66,9 @@
             // 
             // LoadCmdBtn
             // 
-            this.LoadCmdBtn.Location = new System.Drawing.Point(28, 37);
+            this.LoadCmdBtn.Location = new System.Drawing.Point(28, 34);
             this.LoadCmdBtn.Name = "LoadCmdBtn";
-            this.LoadCmdBtn.Size = new System.Drawing.Size(104, 56);
+            this.LoadCmdBtn.Size = new System.Drawing.Size(104, 52);
             this.LoadCmdBtn.TabIndex = 1;
             this.LoadCmdBtn.Text = "Load CMD";
             this.LoadCmdBtn.UseVisualStyleBackColor = true;
@@ -76,9 +76,9 @@
             // 
             // RunTestBtn
             // 
-            this.RunTestBtn.Location = new System.Drawing.Point(201, 37);
+            this.RunTestBtn.Location = new System.Drawing.Point(201, 34);
             this.RunTestBtn.Name = "RunTestBtn";
-            this.RunTestBtn.Size = new System.Drawing.Size(104, 56);
+            this.RunTestBtn.Size = new System.Drawing.Size(104, 52);
             this.RunTestBtn.TabIndex = 2;
             this.RunTestBtn.Text = "Run Test";
             this.RunTestBtn.UseVisualStyleBackColor = true;
@@ -86,9 +86,9 @@
             // 
             // ClearBtn
             // 
-            this.ClearBtn.Location = new System.Drawing.Point(374, 37);
+            this.ClearBtn.Location = new System.Drawing.Point(374, 34);
             this.ClearBtn.Name = "ClearBtn";
-            this.ClearBtn.Size = new System.Drawing.Size(104, 56);
+            this.ClearBtn.Size = new System.Drawing.Size(104, 52);
             this.ClearBtn.TabIndex = 3;
             this.ClearBtn.Text = "Clear";
             this.ClearBtn.UseVisualStyleBackColor = true;
@@ -96,26 +96,26 @@
             // 
             // CmdTb
             // 
-            this.CmdTb.Location = new System.Drawing.Point(28, 109);
+            this.CmdTb.Location = new System.Drawing.Point(28, 101);
             this.CmdTb.Multiline = true;
             this.CmdTb.Name = "CmdTb";
-            this.CmdTb.Size = new System.Drawing.Size(450, 202);
+            this.CmdTb.Size = new System.Drawing.Size(450, 187);
             this.CmdTb.TabIndex = 4;
             // 
             // DataTb
             // 
-            this.DataTb.Location = new System.Drawing.Point(28, 338);
+            this.DataTb.Location = new System.Drawing.Point(28, 312);
             this.DataTb.Multiline = true;
             this.DataTb.Name = "DataTb";
             this.DataTb.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.DataTb.Size = new System.Drawing.Size(450, 202);
+            this.DataTb.Size = new System.Drawing.Size(450, 187);
             this.DataTb.TabIndex = 5;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 569);
+            this.ClientSize = new System.Drawing.Size(506, 525);
             this.Controls.Add(this.DataTb);
             this.Controls.Add(this.CmdTb);
             this.Controls.Add(this.ClearBtn);
@@ -126,6 +126,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
