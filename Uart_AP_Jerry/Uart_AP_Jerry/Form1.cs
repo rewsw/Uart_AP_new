@@ -89,18 +89,10 @@ namespace Uart_AP_Jerry
                 //    }
 
                 //}
-                WriteTextSafe("Poll RW_Start[0] tie Low\r\n");
-                while (true) {
-                    byte[] re1 = new byte[1] { 0x0a };
-                    sp.Write(re1, 0, re1.Length);
-                    Thread.Sleep(5);
-                    byte[] rs = new byte[4];
-                    sp.Read(rs, 0, rs.Length);
-                    if ((rs[0] & 0x01) == 0x00) {
-                        break;
-                    }
-                  
-                }
+                Thread.Sleep(10);
+                byte[] wr3 = new byte[5] { 0x8a, 0x00, 0x00, 0x00, 0x00 };
+                sp.Write(wr3, 0, wr3.Length);
+                WriteTextSafe("Send Clear RW_Start\r\n");
                 WriteTextSafe("---------------TM0 END---------------\r\n", UpdateDelegate);
             }
         }
@@ -220,6 +212,7 @@ namespace Uart_AP_Jerry
                 sp.Write(RW_Start, 0, RW_Start.Length);
                 WriteTextSafe("Send Write RW_Start\r\n");
                 Thread.Sleep(5);
+                
                 WriteTextSafe("Poll RW_Start[0] tie Low\r\n");
                 while (true)
                 {
@@ -277,6 +270,175 @@ namespace Uart_AP_Jerry
                     index++;
                 }
                 Console.WriteLine("--------------------------");
+                WriteTextSafe("---------------TM End--------------- \r\n", UpdateDelegate);
+            }
+        }
+        private void NewTM3(SerialPort sp, UInt32 address, UInt32 Data, UInt32 Cnt,byte Direction)
+        {
+            if (sp.IsOpen) {
+                WriteTextSafe("---------------TM3 Start---------------\r\n");
+
+                byte[] Address = new byte[5] { 0x80, (byte)((address >> 0) & 0xFF), (byte)((address >> 8) & 0xFF),
+                    (byte)((address>> 16) & 0xFF), (byte)((address >> 24) & 0xFF) };
+                Console.Write("Address: ");
+                for (int i = 0; i < Address.Length; i++)
+                {
+                    Console.Write(string.Format(" {0:x}", Address[i]));
+                }
+                Console.WriteLine();
+                sp.Write(Address, 0, Address.Length);
+                Thread.Sleep(5);
+
+                if ((Direction & 0x1 ) > 0)
+                {
+                    byte[] write_data = new byte[5] {(byte)(0x81), (byte)((Data >> 0) & 0xFF), (byte)((Data >> 8) & 0xFF),
+                    (byte)((Data >> 16) & 0xFF), (byte)((Data >> 24) & 0xFF)};
+                    for (int i = 0; i < Address.Length; i++)
+                    {
+                        Console.Write(string.Format(" {0:x}", write_data[i]));
+                    }
+                    sp.Write(write_data, 0, write_data.Length);
+                    Console.WriteLine();
+                    WriteTextSafe(string.Format("Write Data  --> {0:X8}\r\n", Data));
+                }
+                Thread.Sleep(5);
+
+                Console.WriteLine("Driection : " + Direction);
+                byte[] RW_CTRL = new byte[5] { 0x89, 0x12, Direction, 0x03, 0x00 };
+                byte[] RW_Start = new byte[5] { 0x8a, 0x01, 0x00, 0x00, 0x00 };
+                sp.Write(RW_CTRL, 0, RW_CTRL.Length);
+                WriteTextSafe("Send Write RW_CTRL\r\n");
+                Thread.Sleep(5);
+                sp.Write(RW_Start, 0, RW_Start.Length);
+                WriteTextSafe("Send Write RW_Start\r\n");
+                Thread.Sleep(5);
+
+                WriteTextSafe("Poll RW_Start[0] tie Low\r\n");
+                while (true)
+                {
+                    byte[] re1 = new byte[1] { 0x0a };
+                    sp.Write(re1, 0, re1.Length);
+                    Thread.Sleep(5);
+                    try
+                    {
+                        byte[] rs = new byte[4];
+
+                        int rb = sp.Read(rs, 0, rs.Length);
+                        if ((rs[0] & 0x01) == 0x00)
+                        {
+                            break;
+                        }
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        Console.WriteLine("TimeOut error");
+                        continue;
+                    }
+
+                }
+
+                if ((Direction & (0x1)) == 0)
+                {
+                    byte[] Read_data = new byte[1] { (byte)(0x05 ) };
+                    sp.Write(Read_data, 0, Read_data.Length);
+
+                    Thread.Sleep(5);
+                    byte[] RData = new byte[4];
+                    int rb = sp.Read(RData, 0, RData.Length);
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Console.Write(string.Format(" {0:x}", RData[i]));
+                    }
+                    Console.WriteLine();
+                    UInt32 Decoder = hex_to_uint(RData);
+                    if (Decoder == Data)
+                    {
+                        WriteTextSafe(string.Format("Read Data <-- {0:X8} == {1:X8}\r\n", Decoder, Data));
+                    }
+                    else
+                    {
+                        WriteTextSafe(string.Format("Read Data <-- {0:X8} != {1:X8}\r\n", Decoder, Data));
+                    }
+                }
+
+                byte[] re2 = new byte[1] { 0x0b };
+                sp.Write(re2, 0, re2.Length);
+                Thread.Sleep(5);
+
+                WriteTextSafe("Read Test Counter\r\n");
+                byte[] rs2 = new byte[4];
+                int rb2 = sp.Read(rs2, 0, rs2.Length);
+                UInt32 Result = (UInt32)(rs2[0] + (rs2[1] << 8) + (rs2[2] << 16) + (rs2[3] << 24));
+                if (Result == Cnt)
+                {
+                    WriteTextSafe("Data Right\r\n");
+
+
+                }
+                else
+                {
+                    WriteTextSafe("Data Fault\r\n");
+
+                }
+                WriteTextSafe("---------------TM End--------------- \r\n", UpdateDelegate);
+            }
+        }
+        private void TM7(SerialPort sp,int PGA_GAIN,int LPCF,int AFE_SEL,int LQF,int SCKSW,UInt32 THEN_CNT) {
+            if (sp.IsOpen)
+            {
+                WriteTextSafe("---------------TM7 Start---------------\r\n");
+                byte[] AFESET = new byte[5] { 0x8C, (byte)(LQF<<4|PGA_GAIN), (byte)(LPCF),
+                    (byte)(0), (byte)(0) };
+                WriteTextSafe(string.Format("Send Write AFESET {0:X8} {1:X8} {2:X8} {3:X8}\r\n", AFESET[1], AFESET[2], AFESET[3], AFESET[4]));
+                sp.Write(AFESET, 0, AFESET.Length);
+                Thread.Sleep(5);
+
+                byte[] AFESEL = new byte[5] { 0x8D, (byte)(AFE_SEL<<4|SCKSW), (byte)(0),
+                    (byte)(0), (byte)(0) };
+                WriteTextSafe(string.Format("Send Write AFESEL {0:X8} {1:X8} {2:X8} {3:X8}\r\n", AFESEL[1], AFESEL[2], AFESEL[3], AFESEL[4]));
+                sp.Write(AFESEL, 0, AFESEL.Length);
+                Thread.Sleep(5);
+
+                byte[] ThenCNT = new byte[5] { 0x8E, (byte)((THEN_CNT >> 0) & 0xFF), (byte)((THEN_CNT >> 8) & 0xFF),
+                    (byte)((THEN_CNT>> 16) & 0xFF), (byte)((THEN_CNT >> 24) & 0xFF) };
+                WriteTextSafe(string.Format("Send Write ThenCNT {0:X8} {1:X8} {2:X8} {3:X8}\r\n", ThenCNT[1], ThenCNT[2], ThenCNT[3], ThenCNT[4]));
+                sp.Write(ThenCNT, 0, ThenCNT.Length);
+                Thread.Sleep(5);
+
+                WriteTextSafe("Send Write RW_CTRL\r\n");
+                byte[] RW_CTRL = new byte[5] { 0x89, 0, 0, 0x04, 0x00 };
+                sp.Write(RW_CTRL, 0, RW_CTRL.Length);
+                Thread.Sleep(5);
+
+                WriteTextSafe("Send Write RW_Start\r\n");
+                byte[] RW_Start = new byte[5] { 0x8a, 0x01, 0x00, 0x00, 0x00 };
+                sp.Write(RW_Start, 0, RW_Start.Length);
+                Thread.Sleep(5);
+
+                WriteTextSafe("Poll RW_Start[0] tie Low\r\n");
+                while (true)
+                {
+                    byte[] re1 = new byte[1] { 0x0a };
+                    sp.Write(re1, 0, re1.Length);
+                    Thread.Sleep(5);
+                    try
+                    {
+                        byte[] rs = new byte[4];
+
+                        int rb = sp.Read(rs, 0, rs.Length);
+                        if ((rs[0] & 0x01) == 0x00)
+                        {
+                            break;
+                        }
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        Console.WriteLine("TimeOut error");
+                        continue;
+                    }
+
+                }
                 WriteTextSafe("---------------TM End--------------- \r\n", UpdateDelegate);
             }
         }
@@ -345,11 +507,32 @@ namespace Uart_AP_Jerry
 
                         UInt32 address = UInt32.Parse(cmd_array[i][4], System.Globalization.NumberStyles.HexNumber);
                         byte direction = byte.Parse(cmd_array[i][2], System.Globalization.NumberStyles.HexNumber);
+                        int times = int.Parse(cmd_array[i][1], System.Globalization.NumberStyles.HexNumber);
                         UInt32[] Data = new UInt32[] { UInt32.Parse(cmd_array[i][5], System.Globalization.NumberStyles.HexNumber),
                                                        UInt32.Parse(cmd_array[i][6], System.Globalization.NumberStyles.HexNumber),
                                                        UInt32.Parse(cmd_array[i][7], System.Globalization.NumberStyles.HexNumber),
                                                        UInt32.Parse(cmd_array[i][8], System.Globalization.NumberStyles.HexNumber)};
-                         Read4DataFromContinuousAddress(_SP, address, Data, direction);
+                        UInt32 Cnt = UInt32.Parse(cmd_array[i][9], System.Globalization.NumberStyles.HexNumber);
+                        if (times == 4)
+                        {
+                            Read4DataFromContinuousAddress(_SP, address, Data, direction);
+                        }
+                        else
+                        {
+                            NewTM3(_SP, address, Data[0],Cnt, direction);
+                        }
+
+                        break;
+                    case 0x04:
+                        //   WriteTextSafe(string.Format("=======================執行第[{0}]=======================\r\n", i));
+                        int LPCF = int.Parse(cmd_array[i][1], System.Globalization.NumberStyles.HexNumber);
+                        int LQF = int.Parse(cmd_array[i][2], System.Globalization.NumberStyles.HexNumber);
+                        int PGA_GAIN = int.Parse(cmd_array[i][3], System.Globalization.NumberStyles.HexNumber);
+                        int AFE_SEL = int.Parse(cmd_array[i][4], System.Globalization.NumberStyles.HexNumber);
+                        int SCKSW = int.Parse(cmd_array[i][5], System.Globalization.NumberStyles.HexNumber);
+                        UInt32 Then_CNT = UInt32.Parse(cmd_array[i][6], System.Globalization.NumberStyles.HexNumber);
+
+                        TM7(_SP,PGA_GAIN,LPCF,AFE_SEL,LQF,SCKSW,Then_CNT);
 
                         break;
                     case 0x1e:
