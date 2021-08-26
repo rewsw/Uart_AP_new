@@ -384,18 +384,18 @@ namespace Uart_AP_Jerry
                 WriteTextSafe("---------------TM End--------------- \r\n", UpdateDelegate);
             }
         }
-        private void TM7(SerialPort sp,int PGA_GAIN,int LPCF,int AFE_SEL,int LQF,int SCKSW,UInt32 THEN_CNT) {
+        private void TM7(SerialPort sp,int PGA_GAIN,int LPCF,int AFE_SEL,int LQF,int SCKSW,UInt32 THEN_CNT,int MUX_AFE,int ST_TIMES,int THEN_TIE) {
             if (sp.IsOpen)
             {
                 WriteTextSafe("---------------TM7 Start---------------\r\n");
-                byte[] AFESET = new byte[5] { 0x8C, (byte)(LQF<<4|PGA_GAIN), (byte)(LPCF),
+                byte[] AFESET = new byte[5] { 0x8C, (byte)(LQF<<4|PGA_GAIN), (byte)(THEN_TIE<<4|LPCF),
                     (byte)(0), (byte)(0) };
                 WriteTextSafe(string.Format("Send Write AFESET {0:X8} {1:X8} {2:X8} {3:X8}\r\n", AFESET[1], AFESET[2], AFESET[3], AFESET[4]));
                 sp.Write(AFESET, 0, AFESET.Length);
                 Thread.Sleep(5);
 
-                byte[] AFESEL = new byte[5] { 0x8D, (byte)(AFE_SEL<<4|SCKSW), (byte)(0),
-                    (byte)(0), (byte)(0) };
+                byte[] AFESEL = new byte[5] { 0x8D, (byte)(AFE_SEL<<4|SCKSW), (byte)MUX_AFE,
+                    (byte)ST_TIMES, (byte)(0) };
                 WriteTextSafe(string.Format("Send Write AFESEL {0:X8} {1:X8} {2:X8} {3:X8}\r\n", AFESEL[1], AFESEL[2], AFESEL[3], AFESEL[4]));
                 sp.Write(AFESEL, 0, AFESEL.Length);
                 Thread.Sleep(5);
@@ -529,10 +529,13 @@ namespace Uart_AP_Jerry
                         int LQF = int.Parse(cmd_array[i][2], System.Globalization.NumberStyles.HexNumber);
                         int PGA_GAIN = int.Parse(cmd_array[i][3], System.Globalization.NumberStyles.HexNumber);
                         int AFE_SEL = int.Parse(cmd_array[i][4], System.Globalization.NumberStyles.HexNumber);
-                        int SCKSW = int.Parse(cmd_array[i][5], System.Globalization.NumberStyles.HexNumber);
-                        UInt32 Then_CNT = UInt32.Parse(cmd_array[i][6], System.Globalization.NumberStyles.HexNumber);
+                        int MUX_AFE = int.Parse(cmd_array[i][5], System.Globalization.NumberStyles.HexNumber);
+                        int ST_TIMES = int.Parse(cmd_array[i][6], System.Globalization.NumberStyles.HexNumber);
+                        int SCKSW = int.Parse(cmd_array[i][7], System.Globalization.NumberStyles.HexNumber);
+                        UInt32 Then_CNT = UInt32.Parse(cmd_array[i][8], System.Globalization.NumberStyles.HexNumber);
+                        int THEN_TIE = int.Parse(cmd_array[i][9], System.Globalization.NumberStyles.HexNumber);
 
-                        TM7(_SP,PGA_GAIN,LPCF,AFE_SEL,LQF,SCKSW,Then_CNT);
+                        TM7(_SP,PGA_GAIN,LPCF,AFE_SEL,LQF,SCKSW,Then_CNT,MUX_AFE,ST_TIMES,THEN_TIE);
 
                         break;
                     case 0x1e:
